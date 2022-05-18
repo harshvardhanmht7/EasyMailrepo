@@ -85,6 +85,7 @@ else{
 
 //GET api/users/
  export const getUsers=asyncHandler(async(req,res)=>{
+     console.log('test')
 
   try {
     
