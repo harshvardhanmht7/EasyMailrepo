@@ -1,5 +1,6 @@
 import userModel  from '../models/userModel.js'
 import asyncHandler from 'express-async-handler'
+import {generateToken} from '../utils/generateToken.js'
 
 //POST api/users/addUser
 
@@ -40,18 +41,30 @@ export const loign=asyncHandler(async(req,res)=>{
 
 const {email,password}=req.body
 
+
+
 if(email,password){
+
+    
 
     const [user]=await userModel.find({email:email})
     
     
+    
     if (user){
+        
          if(password===user.password){
-            console.log(user)
-           res.json(user)
+            
+           res.json({
+            _id:user._id,
+            name:user.name,
+            email:user.email,
+            token:generateToken(user._id)
+           })
 
          }
          else{
+             res.status(401)
              throw new Error('Password is incorrect !')
          }
     }
@@ -75,7 +88,7 @@ else{
 
   try {
     
-    const users= await userModel.find({})
+    const users= await userModel.find({ _id: { $nin: [req.user._id] } })
        
         res.json(users)
     }
